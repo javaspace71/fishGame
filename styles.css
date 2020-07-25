@@ -5,10 +5,12 @@
 }
 
 #myCanvas{
-	width: 90%;
+	display: inline;
+	width: 100%;
 }
 
 #main-canvas{
+  display: inline;
 	width: 100%;
 }
 

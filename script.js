@@ -5,6 +5,7 @@ var Engine = Matter.Engine,
     Mouse = Matter.Mouse,
     MouseConstraint = Matter.MouseConstraint,
     Composites = Matter.Composites,
+    Composite = Matter.Composite,
     Common = Matter.Common,
     World = Matter.World,
     Events = Matter.Events,
@@ -120,7 +121,19 @@ let seeweed7 = Bodies.rectangle(210, 600, 10, 5, {
 var bubbleRadius;
 var bubbles =[];
 var fishbubbles = [];
-var bubblesImg = ['Assets/bubble2.png', 'Assets/bubble3.png', 'Assets/bubble4.png', 'Assets/bubble5.png', 'Assets/bubble6.png', 'Assets/bubble7.png', 'Assets/bubble7b.png', 'Assets/bubble8.png', 'Assets/bubble8b.png','Assets/bubble9.png', 'Assets/bubble9b.png', 'Assets/bubble9c.png'];
+var bubblesImg = [
+  {image: 'Assets/bubble2.png', addsTo: 2},
+  {image: 'Assets/bubble3.png', addsTo: 3},
+  {image: 'Assets/bubble4.png', addsTo: 4},
+  {image: 'Assets/bubble5.png', addsTo: 5},
+  {image: 'Assets/bubble6.png', addsTo: 6},
+  {image: 'Assets/bubble7.png', addsTo: 7},
+  {image: 'Assets/bubble7b.png', addsTo: 7},
+  {image: 'Assets/bubble8.png', addsTo: 8},
+  {image: 'Assets/bubble8b.png', addsTo: 8},
+  {image: 'Assets/bubble9.png', addsTo: 9},
+  {image: 'Assets/bubble9b.png', addsTo: 9},
+  {image: 'Assets/bubble9c.png', addsTo: 9}];
 var bubblesFishImg = ['Assets/Fish1.svg', 'Assets/Fish2.svg', 'Assets/Fish3.svg', 'Assets/Fish4.svg', 'Assets/Fish5.svg'];
 var fishImg = ['Assets/fish1.png', 'Assets/fish2.png', 'Assets/fish3.png', 'Assets/fish4.png', 'Assets/fish5.png'];
 var mContraint;
@@ -130,17 +143,20 @@ function createBubbles(type, n){
   for (var i=0;i<n;i++){
     var randomNum = Math.floor(Math.random() * type.length);
     bubbleRadius = randomNum*3+30;
-    bubbles.push(Bodies.circle(400,600, bubbleRadius , {
+    var bubbleBody = Bodies.circle(400,600, bubbleRadius , {
       restitution: 0.6,
       friction: 0.1,
       render: {
         sprite: {
-          texture: type[randomNum],
+          texture: type[randomNum].image,
           xScale: 0.0015*bubbleRadius,
           yScale: 0.0015*bubbleRadius
         }
       }
-    }));
+    });
+    bubbleBody.label = type[randomNum].addsTo;
+    bubbles.push(bubbleBody);
+    //console.log(bubbles);
   }
   return bubbles;
 }
@@ -165,7 +181,6 @@ function createFishBubbles(type, n){
   }
   return fishbubbles;
 }
-
 
 function createFish(n){
   fish = Bodies.rectangle(200,200,80,40,{
@@ -197,13 +212,24 @@ mConstraint = MouseConstraint.create(engine, {
     }
   });
 
+var digitEvent = Events.on(engine, "beforeUpdate", function(error){
+  if(bestPred!=null){
+    for(var i=0;i<Composite.allBodies(world).length;i++){
+      if(Composite.allBodies(world)[i].label === bestPred){
+        console.log(Composite.allBodies(world)[i]);
+        World.remove(world, Composite.allBodies(world)[i]);
+      }
+    }
+
+  }
+  bestPred=null;
+});
+
 var mEvent = Events.on(mConstraint, "mousedown", function(error){
-  console.log(bestPred);
   if(mConstraint.body!==null){
     //console.log(mConstraint.body);
     //console.log(mConstraint.body.label);
     //console.log(mConstraint.body.render.sprite.texture);
-
     if(mConstraint.body.label==="fish"){
       switch(mConstraint.body.render.sprite.texture){
         case bubblesFishImg[0]:

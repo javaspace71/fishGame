@@ -74,7 +74,7 @@ function updateDisplay(predictions) {
 
 /* Clears canvas */
 function erase() {
-  inputBox.fillStyle = 'Assets/bubble8.png';
+  inputBox.fillStyle = 'black';
   inputBox.fillRect(0, 0, canvas.width, canvas.height);
 }
 
