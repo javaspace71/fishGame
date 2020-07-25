@@ -14,9 +14,11 @@ var Engine = Matter.Engine,
 function start(){
 var engine = Engine.create(), world = engine.world;
 engine.world.gravity.y = -1;
+var gravity = engine.world.gravity;
 
 var render = Render.create({
-  element: document.body,
+  //element: document.body,
+  canvas: document.querySelector('#myCanvas'),
   engine: engine,
   options: {
     width: 800,
@@ -118,7 +120,7 @@ let seeweed7 = Bodies.rectangle(210, 600, 10, 5, {
 var bubbleRadius;
 var bubbles =[];
 var fishbubbles = [];
-var bubblesImg = ['Assets/bubble10.svg', 'Assets/bubble11.svg', 'Assets/bubble12.svg', 'Assets/bubble13.svg', 'Assets/bubble14.svg', 'Assets/bubble15.svg', 'Assets/bubble16.svg', 'Assets/bubble17.svg', 'Assets/bubble18.svg', 'Assets/bubble19.svg', 'Assets/bubble20.svg'];
+var bubblesImg = ['Assets/bubble2.png', 'Assets/bubble3.png', 'Assets/bubble4.png', 'Assets/bubble5.png', 'Assets/bubble6.png', 'Assets/bubble7.png', 'Assets/bubble7b.png', 'Assets/bubble8.png', 'Assets/bubble8b.png','Assets/bubble9.png', 'Assets/bubble9b.png', 'Assets/bubble9c.png'];
 var bubblesFishImg = ['Assets/Fish1.svg', 'Assets/Fish2.svg', 'Assets/Fish3.svg', 'Assets/Fish4.svg', 'Assets/Fish5.svg'];
 var fishImg = ['Assets/fish1.png', 'Assets/fish2.png', 'Assets/fish3.png', 'Assets/fish4.png', 'Assets/fish5.png'];
 var mContraint;
@@ -134,8 +136,8 @@ function createBubbles(type, n){
       render: {
         sprite: {
           texture: type[randomNum],
-          xScale: 0.015*bubbleRadius,
-          yScale: 0.015*bubbleRadius
+          xScale: 0.0015*bubbleRadius,
+          yScale: 0.0015*bubbleRadius
         }
       }
     }));
@@ -164,7 +166,6 @@ function createFishBubbles(type, n){
   return fishbubbles;
 }
 
-var noGravity = true;
 
 function createFish(n){
   fish = Bodies.rectangle(200,200,80,40,{
@@ -179,8 +180,11 @@ function createFish(n){
       }
     }
   });
+  //console.log(fish);
   World.add(world, fish);
+  return fish;
 }
+
 
 var mouse = Mouse.create(render.canvas);
 mConstraint = MouseConstraint.create(engine, {
@@ -194,8 +198,9 @@ mConstraint = MouseConstraint.create(engine, {
   });
 
 var mEvent = Events.on(mConstraint, "mousedown", function(error){
+  console.log(bestPred);
   if(mConstraint.body!==null){
-    console.log(mConstraint.body);
+    //console.log(mConstraint.body);
     //console.log(mConstraint.body.label);
     //console.log(mConstraint.body.render.sprite.texture);
 

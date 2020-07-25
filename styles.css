@@ -1,3 +1,17 @@
-body{
-  background-color: #333;
+
+#canvases{
+	display: flex;
+  width: 100%;
+}
+
+#myCanvas{
+	width: 90%;
+}
+
+#main-canvas{
+	width: 100%;
+}
+
+#small-canvas{
+	display: none;
 }
