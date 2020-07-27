@@ -1,26 +1,26 @@
-#position{
-  position:	relative;
-	padding: 0;
-	margin: auto;
-	width: 1000px;
-	display: block;
+#position {
+  position: relative;
+  padding: 0;
+  margin: auto;
+  width: 1000px;
+  display: block;
 }
 
-#myCanvas{
-	position: absolute;
-	top: 0;
- 	left: 0;
- 	z-index: 0;
+#myCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
 }
 
-#main-canvas{
-	position: absolute;
-	top: 0;
-	left: 0;
-	z-index: 1;
-	border-radius: 100px;
+#main-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  border-radius: 100px;
 }
 
-#small-canvas{
-	display: none;
+#small-canvas {
+  display: none;
 }

@@ -1,4 +1,4 @@
-//    SETUP
+/*  SETUP  */
 var Engine = Matter.Engine,
     Render = Matter.Render,
     Runner = Matter.Runner,
@@ -14,7 +14,7 @@ var Engine = Matter.Engine,
     Body = Matter.Body;
     Sleeping = Matter.Sleeping;
 
-//    ON START SET ENGINE, WORLD, GRAVITY, RENDER
+/*  ON START SET ENGINE, WORLD, GRAVITY, RENDER  */
 function start(){
   var engine = Engine.create(), world = engine.world;
   engine.world.gravity.y = -1;
@@ -39,7 +39,7 @@ function start(){
   var defaultCategory = 0x0001,//TO DO
       noCollisionCategory = 0x002;
 
-//    STATIC BODIES
+/*  STATIC BODIES  */
 let sideL = Bodies.rectangle(0,0,1, 1200, { isStatic: true, render: { visible: false} });
 let sideR = Bodies.rectangle(800,0,1, 1200, { isStatic: true, render: { visible: false} });
 let sideUp = Bodies.rectangle(400, 0, 1200, 1, { isStatic: true, render: { visible: false} });
@@ -123,8 +123,10 @@ let seeweed7 = Bodies.rectangle(210, 600, 10, 5, {
   }
 });
 
-//    BUBBLES
+/*  BUBBLE BODIES  */
 var bubbleRadius;
+var mContraint;
+var fish=null;
 var bubbles =[];
 var fishbubbles = [];
 var bubblesImg = [
@@ -140,10 +142,18 @@ var bubblesImg = [
   {image: 'Assets/bubble9.png', addsTo: 9},
   {image: 'Assets/bubble9b.png', addsTo: 9},
   {image: 'Assets/bubble9c.png', addsTo: 9}];
-var bubblesFishImg = ['Assets/Fish1.svg', 'Assets/Fish2.svg', 'Assets/Fish3.svg', 'Assets/Fish4.svg', 'Assets/Fish5.svg'];
-var fishImg = ['Assets/fish1.png', 'Assets/fish2.png', 'Assets/fish3.png', 'Assets/fish4.png', 'Assets/fish5.png'];
-var mContraint;
-var fish=null;
+var bubblesFishImg = [
+  'Assets/Fish1.svg',
+  'Assets/Fish2.svg',
+  'Assets/Fish3.svg',
+  'Assets/Fish4.svg',
+  'Assets/Fish5.svg'];
+var fishImg = [
+  'Assets/fish1.png',
+  'Assets/fish2.png',
+  'Assets/fish3.png',
+  'Assets/fish4.png',
+  'Assets/fish5.png'];
 
 function createBubbles(type, n){
   for (var i=0;i<n;i++){
@@ -187,6 +197,10 @@ function createFishBubbles(type, n){
   return fishbubbles;
 }
 
+createBubbles(bubblesImg, 30);
+createFishBubbles(bubblesFishImg, 5);
+
+/*  GENERATING FISH  */
 function createFish(n){
   fish = Bodies.rectangle(200,200,80,40,{
     restitution: 0.6,
@@ -206,76 +220,14 @@ function createFish(n){
   return fish;
 }
 
+/*  MOUSE CONSTRAINT - for construction purposes, need to be removed for final version  */
 var mouse = Mouse.create(render.canvas);
 mConstraint = MouseConstraint.create(engine, {
-    mouse: mouse,
-    contraint: {
-      stiffness: 20,
-      render: {
-        visible: false
-      }
-    }
-  });
-
-Events.on(engine, "beforeUpdate", function(error){
-  if(bestPred!=null){
-    for(var i=0;i<Composite.allBodies(world).length;i++){
-      if(Composite.allBodies(world)[i].label === bestPred){
-        console.log(Composite.allBodies(world)[i]);
-        World.remove(world, Composite.allBodies(world)[i]);
-      }
-    }
-  }
-  bestPred=null;
-});
-
-Events.on(engine, "beforeUpdate", function(error){
-  if(fish!==null){
-    Body.applyForce(fish, fish.position, {
-      x: -gravity.x * gravity.scale * fish.mass*1.2,
-      y: -gravity.y * gravity.scale * fish.mass*1.2
-    });
-  }
-});
-
-function sortFish(spriteFish){
-  switch(spriteFish){
-    case bubblesFishImg[0]:
-      createFish(fishImg[0]);
-      break;
-    case bubblesFishImg[1]:
-      createFish(fishImg[1]);
-      break;
-    case bubblesFishImg[2]:
-      createFish(fishImg[2]);
-      break;
-    case bubblesFishImg[3]:
-      createFish(fishImg[3]);
-      break;
-    case bubblesFishImg[4]:
-      createFish(fishImg[4]);
-      break;
-    case bubblesFishImg[5]:
-      createFish(fishImg[5]);
-      break;
-  }
-}
-
-
-Events.on(engine, 'collisionStart', function(event) {
-  var pairs = event.pairs;
-  for(var i=0;i<pairs.length;i++){
-    if ((pairs[i].bodyA.label == "fish") && (pairs[i].bodyB.label == "sideUp")){
-      var spriteFish = (pairs[i].bodyA.render.sprite.texture);
-      console.log(spriteFish);
-      sortFish(spriteFish);
-      World.remove(world, pairs[i].bodyA);
-    }
-    else if((pairs[i].bodyB.label == "fish") && (pairs[i].bodyA.label == "sideUp")){
-      var spriteFish = (pairs[i].bodyB.render.sprite.texture);
-      console.log(spriteFish);
-      sortFish(spriteFish);
-      World.remove(world, pairs[i].bodyB);
+  mouse: mouse,
+  contraint: {
+    stiffness: 20,
+    render: {
+      visible: false
     }
   }
 });
@@ -304,16 +256,9 @@ var mEvent = Events.on(mConstraint, "mousedown", function(error){
           break;
       }
     }
-  World.remove(world, mConstraint.body);
-}
+    World.remove(world, mConstraint.body);
+  }
 });
-
-createBubbles(bubblesImg, 30);
-createFishBubbles(bubblesFishImg, 5);
-World.add(world, [digitArea, sideL, sideR, sideUp, seeweed1, seeweed2, seeweed3 ,seeweed4, seeweed5, seeweed6, seeweed7]);
-World.add(world, bubbles);
-World.add(world, fishbubbles);
-World.add(world, mConstraint);
 
 render.mouse = mouse;
 Render.lookAt(render, {
@@ -321,3 +266,75 @@ Render.lookAt(render, {
     max: { x: 800, y: 600 }
 });
 }
+
+/*  LINKING BESTPRED NUMBER FROM DIGIT RECOGNITION  */
+Events.on(engine, "beforeUpdate", function(error){
+  if(bestPred!=null){
+    for(var i=0;i<Composite.allBodies(world).length;i++){
+      if(Composite.allBodies(world)[i].label === bestPred){
+        console.log(Composite.allBodies(world)[i]);
+        World.remove(world, Composite.allBodies(world)[i]);
+      }
+    }
+  }
+  bestPred=null;
+});
+
+/*  FISH GRAVITY - to be reworked  */
+Events.on(engine, "beforeUpdate", function(error){
+  if(fish!==null){
+    Body.applyForce(fish, fish.position, {
+      x: -gravity.x * gravity.scale * fish.mass*1.2,
+      y: -gravity.y * gravity.scale * fish.mass*1.2
+    });
+  }
+});
+
+/*  SORTING FISH - to improve with better organization/retreival of data  */
+function sortFish(spriteFish){
+  switch(spriteFish){
+    case bubblesFishImg[0]:
+      createFish(fishImg[0]);
+      break;
+    case bubblesFishImg[1]:
+      createFish(fishImg[1]);
+      break;
+    case bubblesFishImg[2]:
+      createFish(fishImg[2]);
+      break;
+    case bubblesFishImg[3]:
+      createFish(fishImg[3]);
+      break;
+    case bubblesFishImg[4]:
+      createFish(fishImg[4]);
+      break;
+    case bubblesFishImg[5]:
+      createFish(fishImg[5]);
+      break;
+  }
+}
+
+/*  MONITORING COLLISION FISH BUBBLE vs UP WALL  */
+Events.on(engine, 'collisionStart', function(event) {
+  var pairs = event.pairs;
+  for(var i=0;i<pairs.length;i++){
+    if ((pairs[i].bodyA.label == "fish") && (pairs[i].bodyB.label == "sideUp")){
+      var spriteFish = (pairs[i].bodyA.render.sprite.texture);
+      console.log(spriteFish);
+      sortFish(spriteFish);
+      World.remove(world, pairs[i].bodyA);
+    }
+    else if((pairs[i].bodyB.label == "fish") && (pairs[i].bodyA.label == "sideUp")){
+      var spriteFish = (pairs[i].bodyB.render.sprite.texture);
+      console.log(spriteFish);
+      sortFish(spriteFish);
+      World.remove(world, pairs[i].bodyB);
+    }
+  }
+});
+
+/* ADD BODIES TO THE WORLD  */
+World.add(world, [digitArea, sideL, sideR, sideUp, seeweed1, seeweed2, seeweed3 ,seeweed4, seeweed5, seeweed6, seeweed7]);
+World.add(world, bubbles);
+World.add(world, fishbubbles);
+World.add(world, mConstraint);
