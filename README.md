@@ -5,12 +5,8 @@ https://mal2333.github.io/fishGame/
 
 Try to free all of the fishes! Write your addition answers in the dark blue bubble and see the bubbles pop for every correct answer.
 
-![fish][fish1] ![seweed][seeweed1] ![fish][fish2] ![seweed][seeweed2] ![fish][fish3]
-[fish1]: https://github.com/mal2333/fishGame/blob/master/Assets/fish1.png
-[fish2]: https://github.com/mal2333/fishGame/blob/master/Assets/fish2.png
-[fish3]: https://github.com/mal2333/fishGame/blob/master/Assets/fish4.png
-[seeweed1]: https://github.com/mal2333/fishGame/blob/master/Assets/seaweed1.png
-[seeweed2]: https://github.com/mal2333/fishGame/blob/master/Assets/seaweed2.png
+![](https://github.com/mal2333/fishGame/blob/master/Assets/fish1.png) ![](https://github.com/mal2333/fishGame/blob/master/Assets/seaweed1.png) ![](https://github.com/mal2333/fishGame/blob/master/Assets/fish2.png) ![](https://github.com/mal2333/fishGame/blob/master/Assets/seaweed2.png) ![](https://github.com/mal2333/fishGame/blob/master/Assets/fish4.png)
+
 
 
 ### Game's objectives
