@@ -1,3 +1,4 @@
+//    SETUP
 var Engine = Matter.Engine,
     Render = Matter.Render,
     Runner = Matter.Runner,
@@ -10,36 +11,40 @@ var Engine = Matter.Engine,
     World = Matter.World,
     Events = Matter.Events,
     Bodies = Matter.Bodies;
+    Body = Matter.Body;
     Sleeping = Matter.Sleeping;
 
+//    ON START SET ENGINE, WORLD, GRAVITY, RENDER
 function start(){
-var engine = Engine.create(), world = engine.world;
-engine.world.gravity.y = -1;
-var gravity = engine.world.gravity;
+  var engine = Engine.create(), world = engine.world;
+  engine.world.gravity.y = -1;
+  var gravity = engine.world.gravity;
 
-var render = Render.create({
-  //element: document.body,
-  canvas: document.querySelector('#myCanvas'),
-  engine: engine,
-  options: {
-    width: 800,
-    height: 600,
-    showAngleIndicator: false,
-    background: 'Assets/bg2.png',
-    wireframes: false
-  }
-});
+  var render = Render.create({
+    //element: document.body,
+    canvas: document.querySelector('#myCanvas'),
+    engine: engine,
+    options: {
+      width: 1000,
+      height: 751,
+      showAngleIndicator: false,
+      background: 'Assets/bg.png',
+      wireframes: false
+    }
+  });
 
-Render.run(render);
-var runner = Runner.create();
-Runner.run(runner, engine);
-var defaultCategory = 0x0001,
-    noCollisionCategory = 0x002;
+  Render.run(render);
+  var runner = Runner.create();
+  Runner.run(runner, engine);
+  var defaultCategory = 0x0001,//TO DO
+      noCollisionCategory = 0x002;
 
-// add bodies
+//    STATIC BODIES
 let sideL = Bodies.rectangle(0,0,1, 1200, { isStatic: true, render: { visible: false} });
 let sideR = Bodies.rectangle(800,0,1, 1200, { isStatic: true, render: { visible: false} });
 let sideUp = Bodies.rectangle(400, 0, 1200, 1, { isStatic: true, render: { visible: false} });
+sideUp.label='sideUp';
+let digitArea = Bodies.circle(80,80,80, { isStatic: true, render: { visible: false} });
 let seeweed1 = Bodies.rectangle(200, 600, 10, 5, {
   isStatic: true,
   render: {
@@ -118,6 +123,7 @@ let seeweed7 = Bodies.rectangle(210, 600, 10, 5, {
   }
 });
 
+//    BUBBLES
 var bubbleRadius;
 var bubbles =[];
 var fishbubbles = [];
@@ -137,7 +143,7 @@ var bubblesImg = [
 var bubblesFishImg = ['Assets/Fish1.svg', 'Assets/Fish2.svg', 'Assets/Fish3.svg', 'Assets/Fish4.svg', 'Assets/Fish5.svg'];
 var fishImg = ['Assets/fish1.png', 'Assets/fish2.png', 'Assets/fish3.png', 'Assets/fish4.png', 'Assets/fish5.png'];
 var mContraint;
-var fish;
+var fish=null;
 
 function createBubbles(type, n){
   for (var i=0;i<n;i++){
@@ -156,7 +162,6 @@ function createBubbles(type, n){
     });
     bubbleBody.label = type[randomNum].addsTo;
     bubbles.push(bubbleBody);
-    //console.log(bubbles);
   }
   return bubbles;
 }
@@ -195,11 +200,11 @@ function createFish(n){
       }
     }
   });
-  //console.log(fish);
+  console.log(fish);
+  console.log(fish.body);
   World.add(world, fish);
   return fish;
 }
-
 
 var mouse = Mouse.create(render.canvas);
 mConstraint = MouseConstraint.create(engine, {
@@ -212,7 +217,7 @@ mConstraint = MouseConstraint.create(engine, {
     }
   });
 
-var digitEvent = Events.on(engine, "beforeUpdate", function(error){
+Events.on(engine, "beforeUpdate", function(error){
   if(bestPred!=null){
     for(var i=0;i<Composite.allBodies(world).length;i++){
       if(Composite.allBodies(world)[i].label === bestPred){
@@ -220,16 +225,63 @@ var digitEvent = Events.on(engine, "beforeUpdate", function(error){
         World.remove(world, Composite.allBodies(world)[i]);
       }
     }
-
   }
   bestPred=null;
 });
 
+Events.on(engine, "beforeUpdate", function(error){
+  if(fish!==null){
+    Body.applyForce(fish, fish.position, {
+      x: -gravity.x * gravity.scale * fish.mass*1.2,
+      y: -gravity.y * gravity.scale * fish.mass*1.2
+    });
+  }
+});
+
+function sortFish(spriteFish){
+  switch(spriteFish){
+    case bubblesFishImg[0]:
+      createFish(fishImg[0]);
+      break;
+    case bubblesFishImg[1]:
+      createFish(fishImg[1]);
+      break;
+    case bubblesFishImg[2]:
+      createFish(fishImg[2]);
+      break;
+    case bubblesFishImg[3]:
+      createFish(fishImg[3]);
+      break;
+    case bubblesFishImg[4]:
+      createFish(fishImg[4]);
+      break;
+    case bubblesFishImg[5]:
+      createFish(fishImg[5]);
+      break;
+  }
+}
+
+
+Events.on(engine, 'collisionStart', function(event) {
+  var pairs = event.pairs;
+  for(var i=0;i<pairs.length;i++){
+    if ((pairs[i].bodyA.label == "fish") && (pairs[i].bodyB.label == "sideUp")){
+      var spriteFish = (pairs[i].bodyA.render.sprite.texture);
+      console.log(spriteFish);
+      sortFish(spriteFish);
+      World.remove(world, pairs[i].bodyA);
+    }
+    else if((pairs[i].bodyB.label == "fish") && (pairs[i].bodyA.label == "sideUp")){
+      var spriteFish = (pairs[i].bodyB.render.sprite.texture);
+      console.log(spriteFish);
+      sortFish(spriteFish);
+      World.remove(world, pairs[i].bodyB);
+    }
+  }
+});
+
 var mEvent = Events.on(mConstraint, "mousedown", function(error){
   if(mConstraint.body!==null){
-    //console.log(mConstraint.body);
-    //console.log(mConstraint.body.label);
-    //console.log(mConstraint.body.render.sprite.texture);
     if(mConstraint.body.label==="fish"){
       switch(mConstraint.body.render.sprite.texture){
         case bubblesFishImg[0]:
@@ -258,7 +310,7 @@ var mEvent = Events.on(mConstraint, "mousedown", function(error){
 
 createBubbles(bubblesImg, 30);
 createFishBubbles(bubblesFishImg, 5);
-World.add(world, [sideL, sideR, sideUp, seeweed1, seeweed2, seeweed3 ,seeweed4, seeweed5, seeweed6, seeweed7]);
+World.add(world, [digitArea, sideL, sideR, sideUp, seeweed1, seeweed2, seeweed3 ,seeweed4, seeweed5, seeweed6, seeweed7]);
 World.add(world, bubbles);
 World.add(world, fishbubbles);
 World.add(world, mConstraint);

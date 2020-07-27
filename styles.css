@@ -1,17 +1,24 @@
-
-#canvases{
-	display: flex;
-  width: 100%;
+#position{
+  position:	relative;
+	padding: 0;
+	margin: auto;
+	width: 1000px;
+	display: block;
 }
 
 #myCanvas{
-	display: inline;
-	width: 100%;
+	position: absolute;
+	top: 0;
+ 	left: 0;
+ 	z-index: 0;
 }
 
 #main-canvas{
-  display: inline;
-	width: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 1;
+	border-radius: 100px;
 }
 
 #small-canvas{
