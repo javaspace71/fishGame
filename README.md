@@ -5,7 +5,12 @@ https://mal2333.github.io/fishGame/
 
 Try to free all of the fishes! Write your addition answers in the dark blue bubble and see the bubbles pop for every correct answer.
 
-![](https://i.imgur.com/tOhsp56.png =110x150) ![](https://i.imgur.com/ImisaCg.png =150x100) ![](https://i.imgur.com/drBL6Iq.png =110x150) ![](https://i.imgur.com/6GIhzSO.png =150x100) ![](https://i.imgur.com/yJET65Z.png =110x150)
+![fish][fish1] ![seweed][seeweed1] ![fish][fish2] ![seweed][seeweed2] ![fish][fish3]
+[fish1]: https://github.com/mal2333/fishGame/blob/master/Assets/fish1.png
+[fish2]: https://github.com/mal2333/fishGame/blob/master/Assets/fish2.png
+[fish3]: https://github.com/mal2333/fishGame/blob/master/Assets/fish4.png
+[seeweed1]: https://github.com/mal2333/fishGame/blob/master/Assets/seaweed1.png
+[seeweed2]: https://github.com/mal2333/fishGame/blob/master/Assets/seaweed2.png
 
 
 ### Game's objectives
@@ -32,9 +37,9 @@ Math game for KG aged children based on the idea of mixing physical manipulation
 1. Matter.js set up
 2. Floating bubbles: gravity = -1
 3. Rendering a canvas at #myCanvas
-4. Categories define the collision status of the different objects **to create**
+4. Categories define the collision status of the different objects - **to create**
   1. Fishes don't collide together or with the seeweed, but do with the walls
-  2. Bubbles collide together...
+  2. Bubbles collide together
 5. Bodies
   1. Static: walls, seeweeds
   2. Moveable:
@@ -50,7 +55,7 @@ Math game for KG aged children based on the idea of mixing physical manipulation
 ## SCRIPTDIGITS.JS
 
 1. Load the trained model
-2. Canvas drawing: mousedown, mousemove, mouseup, and draw()
+2. Canvas drawing: `mousedown`, `mousemove`, `mouseup`, and `draw()`
 3. Transform our input into a readable input for our model (correct format: 28x28) and shape it into a tensor
 4. Get predict from the model - array of predictions with confidence
 5. Get the highest prediction and return it (to be found in our game)
